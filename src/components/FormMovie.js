@@ -1,33 +1,24 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import axios from 'axios';
 import './FormMovie.css'
 
-class FormMovie extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            title: '',
-            poster: '',
-            comment: '',
-        }
-        this.onChange = this.onChange.bind(this);
-        this.submitForm = this.submitForm.bind(this);
+const FormMovie = () => {
+    const [addMovie, setAddMovie] = useState({
+        title:'', poster:'', comment:''
+    })
+
+    const onChange = (e) => {
+        setAddMovie({...addMovie, [e.target.name]: e.target.value})
     }
 
-    onChange(e) {
-        this.setState({
-        [e.target.name]: e.target.value,
-        });
-    }
-
-    submitForm(e) {
+    const submitForm = (e) => {
         e.preventDefault();
 
         const url = 'https://post-a-form.herokuapp.com/api/movies/';
         
-        axios.post(url, this.state)
+        axios.post(url, addMovie)
         .then(res => res.data)
-        .then(res => {
+        .then(() => {
             alert(`Film ajouté!`);
         })
         .catch(e => {
@@ -36,14 +27,11 @@ class FormMovie extends Component {
         });
     }
 
-
-
-    render() {
         return (
             <div className="FormMovie">
             <h1>Saisie du film préféré</h1>
 
-            <form onSubmit={this.submitForm}>
+            <form onSubmit={submitForm}>
                 <fieldset>
                 <legend>Informations</legend>
                 <div className="form-data">
@@ -52,8 +40,8 @@ class FormMovie extends Component {
                     type="text"
                     id="title"
                     name="title"
-                    onChange={this.onChange}
-                    value={this.state.title}
+                    onChange={onChange}
+                    value={addMovie.title}
                     />
                 </div>
 
@@ -63,8 +51,8 @@ class FormMovie extends Component {
                     type="text"
                     id="poster"
                     name="poster"
-                    onChange={this.onChange}
-                    value={this.state.poster}
+                    onChange={onChange}
+                    value={addMovie.poster}
                     />
                 </div>
 
@@ -74,8 +62,8 @@ class FormMovie extends Component {
                     type="textarea"
                     id="comment"
                     name="comment"
-                    onChange={this.onChange}
-                    value={this.state.comment}
+                    onChange={onChange}
+                    value={addMovie.comment}
                     />
                 </div>
                 <hr />
@@ -87,7 +75,6 @@ class FormMovie extends Component {
             </div>
 
         )
-    }
 }
 
 export default FormMovie;
